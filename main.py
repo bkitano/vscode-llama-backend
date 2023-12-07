@@ -2,6 +2,13 @@ from pydantic import BaseModel
 from typing import List, Optional
 from dotenv import load_dotenv
 from flask import Flask, request
+import weaviate
+import os 
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.vectorstores import Weaviate
+from langchain.chat_models import ChatOpenAI
+from langchain.chains import ConversationalRetrievalChain
+from langchain.callbacks.streaming_stdout_final_only import FinalStreamingStdOutCallbackHandler
 
 class Message(BaseModel):
     role: str
@@ -13,14 +20,6 @@ class ChatPayload(BaseModel):
 
 load_dotenv()
 app = Flask(__name__)
-
-import weaviate
-import os 
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.vectorstores import Weaviate
-from langchain.chat_models import ChatOpenAI
-from langchain.chains import ConversationalRetrievalChain
-from langchain.callbacks.streaming_stdout_final_only import FinalStreamingStdOutCallbackHandler
 
 def get_response_endpoint(chat_payload: ChatPayload, stream=False):
 
